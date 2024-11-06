@@ -1,11 +1,11 @@
 import React from 'react';
 
-const StartPage = () => {
+const TasksPage = () => {
         return (
                 <div>
-                        Start Page
+                        
                 </div>
         );
 }
 
-export default StartPage;
+export default TasksPage;
