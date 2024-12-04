@@ -1,74 +1,119 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React from "react";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { useId } from "react";
+import { useNavigate } from "react-router-dom";
+import { saveTokens } from "../../services/auth";
+import { setAuthHeader } from "../../services/api";
+import * as Yup from "yup";
+import { loginUser } from "../../services/api"; 
 
-const initialValues = {
-  email: '',
-  password: ''
-};
+interface LoginFormValues {
+    email: string;
+    password: string;
+}
 
-const LoginForm = () => {
-        const labelEmailId = useId();
-        const labelPasswordId = useId();
+const LoginForm: React.FC = () => {
+    const navigate = useNavigate();
+    const labelEmailId = useId();
+    const labelPasswordId = useId();
 
-        const handleSubmit = (values, actions) => {
-                alert(JSON.stringify(values, null, 2));
-                actions.resetForm();
+    const initialValues: LoginFormValues = {
+        email: "",
+        password: ""
+    };
+
+    const validationSchema = Yup.object({
+        email: Yup.string().email("Invalid email").required("Email is required"),
+        password: Yup.string().required("Password is required")
+    });
+
+    const handleSubmit = async (
+        values: LoginFormValues, 
+        actions: FormikHelpers<LoginFormValues>
+    ) => {
+        const { email, password } = values;
+
+        const { success, data, message } = await loginUser({ email, password });
+
+        console.log(success);
+        console.log(data);
+        if (success) {
+            saveTokens(data.accessToken, data.refreshToken);
+            setAuthHeader(data.accessToken);
+            
+            navigate("/todolists");
+        } else {
+            actions.setFieldError("password", message || "Login failed");
         }
 
-        return (
-                <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                        <Form className="w-full max-w-sm mx-auto mt-8 p-4 bg-white shadow-lg rounded-lg">
-                                <div className="mb-4">
-                                        <label htmlFor={labelEmailId} className="block text-sm font-medium text-gray-700">
-                                                Email
-                                        </label>
-                                        <Field
-                                                name="email"
-                                                type="email"
-                                                id={labelEmailId}
-                                                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        />
-                                        <ErrorMessage name="email" component="span" className="text-red-500 text-xs mt-1" />
-                                </div>
+        actions.setSubmitting(false);
+    };
 
-                                <div className="mb-4">
-                                        <div className="flex items-center justify-between">
-                                                <label htmlFor={labelPasswordId} className="block text-sm font-medium text-gray-700">
-                                                        Password
-                                                </label>
-                                                <div className="text-sm">
-                                                        <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                                                                Forgot password?
-                                                        </a>
-                                                </div>
-                                        </div>
-                                        <Field
-                                                name="password"
-                                                type="password"
-                                                id={labelPasswordId}
-                                                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        />
-                                        <ErrorMessage name="password" component="span" className="text-red-500 text-xs mt-1" />
-                                </div>
+    return (
+        <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+        >
+            {({ isSubmitting }) => (
+                <Form className="w-full max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg">
+                    <div className="mb-4">
+                        <label htmlFor={labelEmailId} className="block text-gray-700 mb-2">
+                            Email
+                        </label>
+                        <Field
+                            type="email"
+                            name="email"
+                            id={labelEmailId}
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <ErrorMessage
+                            name="email"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                        />
+                    </div>
 
-                                <button
-                                        type="submit"
-                                        className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                >
-                                        Sign In
-                                </button>
+                    <div className="mb-6">
+                        <label htmlFor={labelPasswordId} className="block text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <Field
+                            type="password"
+                            name="password"
+                            id={labelPasswordId}
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <ErrorMessage
+                            name="password"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                        />
+                    </div>
 
-                                <div className="mt-4 text-center">
-                                        <p className="text-sm text-gray-600">
-                                                Don't have an account?{" "}
-                                                <a href="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                                                        Register here
-                                                </a>
-                                        </p>
-                                </div>
-                        </Form>
-                </Formik>
-        );
-}
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50"
+                    >
+                        {isSubmitting ? "Logging in..." : "Login"}
+                    </button>
+
+                    <div className="mt-4 text-center">
+                        <p className="text-gray-600">
+                            Don't have an account?{" "}
+                            <a
+                                href="/register"
+                                className="text-blue-600 hover:underline"
+                            >
+                                Register here
+                            </a>
+                        </p>
+                    </div>
+                </Form>
+            )}
+        </Formik>
+    );
+};
 
 export default LoginForm;
