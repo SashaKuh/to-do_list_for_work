@@ -94,14 +94,7 @@ const LoginForm: React.FC = () => {
                         disabled={isSubmitting}
                         className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50"
                     >
-                        {isSubmitting ? (
-                            <>
-                                <span className="animate-spin mr-2">🔄</span>
-                                Logging in...
-                            </>
-                        ) : (
-                            "Login"
-                        )}
+                        {isSubmitting ? "Logging in..." : "Login"}
                     </button>
 
                     <div className="mt-4 text-center">
