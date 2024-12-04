@@ -58,7 +58,7 @@ export const registerUser = async (values: { name: string; email: string; passwo
   try {
     const response = await api.post("/auth/register", values);
 
-    if (response.status === 204) {
+    if (response.status === 201) {
       return response.data.data;
     } else {
       throw new Error(response.data.message || "Registration failed");
@@ -72,7 +72,6 @@ export const registerUser = async (values: { name: string; email: string; passwo
 export const loginUser = async (credentials: { email: string; password: string }) => {
   try {
     const response = await api.post("/auth/login", credentials);
-    console.log(response.status);
 
     if (response.status === 201) {
       return { success: true, data: response.data };

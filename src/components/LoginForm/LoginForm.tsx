@@ -35,8 +35,6 @@ const LoginForm: React.FC = () => {
 
         const { success, data, message } = await loginUser({ email, password });
 
-        console.log(success);
-        console.log(data);
         if (success) {
             saveTokens(data.accessToken, data.refreshToken);
             setAuthHeader(data.accessToken);
@@ -96,7 +94,14 @@ const LoginForm: React.FC = () => {
                         disabled={isSubmitting}
                         className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50"
                     >
-                        {isSubmitting ? "Logging in..." : "Login"}
+                        {isSubmitting ? (
+                            <>
+                                <span className="animate-spin mr-2">🔄</span>
+                                Logging in...
+                            </>
+                        ) : (
+                            "Login"
+                        )}
                     </button>
 
                     <div className="mt-4 text-center">
