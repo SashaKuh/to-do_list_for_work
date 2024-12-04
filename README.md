@@ -1,50 +1,72 @@
-# React + TypeScript + Vite
+# How to Run the Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## 1. Local Development Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+To run the project locally in development mode, follow these steps:
 
-## Expanding the ESLint configuration
+### Steps:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-username/your-repo-name.git
+    cd your-repo-name
+    ```
 
-- Configure the top-level `parserOptions` property like this:
+2. **Install dependencies:**
+    To install all the required dependencies, run the following command:
+    ```bash
+    npm install
+    ```
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+3. **Run the project in development mode:**
+    Execute the command:
+    ```bash
+    npm run dev
+    ```
+    This will start the server on **localhost:5173** by default. You can now access the project at [http://localhost:5173](http://localhost:5173).
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## 2. Production Setup
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+To run the project in **production mode**, you need to build the project first and then start it. Here’s how:
+
+### Steps:
+
+1. **Build the project:**
+    First, you need to create the production build. To do so, use the command:
+    ```bash
+    npm run build
+    ```
+
+2. **Run in production mode:**
+    After the build is ready, you can start the production server:
+    ```bash
+    npm start
+    ```
+    This will start the server in production mode, accessible at [http://localhost:5173](http://localhost:5173).
+
+    **Note:** In a production environment, you can deploy the app on platforms like Vercel or other hosting services if you prefer.
+
+---
+
+## 3. First-Time Usage
+
+Please note that when using the project for the first time, it may take longer to load the first request. This is because the backend server starts only when the user interacts with the website. Therefore, the first request might experience some delay as the backend initializes.
+
+---
+
+## 4. Troubleshooting
+
+If you face any issues or errors during setup, please make sure:
+- You have Node.js and npm installed (preferably the latest stable version).
+- Your internet connection is stable for downloading dependencies.
+- You have the correct environment variables set up, if applicable.
+
+If the issue persists, feel free to open an issue in the project repository or check the documentation for more detailed troubleshooting steps.
+
+---
+
+Enjoy building with the project!
