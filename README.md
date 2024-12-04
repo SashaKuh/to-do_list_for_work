@@ -65,8 +65,6 @@ If you face any issues or errors during setup, please make sure:
 - Your internet connection is stable for downloading dependencies.
 - You have the correct environment variables set up, if applicable.
 
-If the issue persists, feel free to open an issue in the project repository or check the documentation for more detailed troubleshooting steps.
-
 ---
 
 Enjoy building with the project!
